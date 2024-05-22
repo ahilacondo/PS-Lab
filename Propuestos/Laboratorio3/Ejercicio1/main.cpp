@@ -1,52 +1,48 @@
 #include <iostream>
-#include <vector>
+#include <string>
 using namespace std;
 
-// Función para calcular el coeficiente binomial
-int calcularCoeficiente(int fila, int columna, vector<vector<int>>& coeficientes) {
-    // Si el coeficiente ya está calculado, lo retornamos
-    if (coeficientes[fila][columna] != -1) {
-        return coeficientes[fila][columna];
-    }
+void genPascal(string*, int);
+void mostrar(string*, int);
+void imprimirEspacios(int);
 
-    // Si estamos en los bordes, el coeficiente es 1
-    if (columna == 0 || columna == fila) {
-        coeficientes[fila][columna] = 1;
-    } else {
-        // Calculamos el coeficiente sumando los coeficientes de las filas anteriores
-        coeficientes[fila][columna] = calcularCoeficiente(fila - 1, columna - 1, coeficientes) +
-                                       calcularCoeficiente(fila - 1, columna, coeficientes);
-    }
-
-    // Retornamos el coeficiente calculado
-    return coeficientes[fila][columna];
+int main() {
+    cout << "Ingrese el número de filas que desea mostrar: ";
+    int size;
+    cin >> size;
+    string *arreglo = new string[size];
+    genPascal(arreglo, size);
+    mostrar(arreglo, size);
+    delete[] arreglo;
+    return 0;
 }
 
-// Función para imprimir el Triángulo de Pascal
-void imprimirTrianguloPascal(int n) {
-    // Matriz para almacenar los coeficientes calculados
-    vector<vector<int>> coeficientes(n, vector<int>(n, -1));
+void genPascal(string *arreglo, int size) {
+    for (int i = 0; i < size; i++) {
+        int c = 1;
+        string fila = "";
+        for (int j = 0; j <= i; j++) {
+            fila += to_string(c) + " ";
+            c = c * (i - j) / (j + 1);
+        }
+        arreglo[i] = fila;
+    }
+}
 
-    for (int fila = 0; fila < n; fila++) {
-        // Imprimimos espacios en blanco para dar forma de triángulo
-        for (int espacio = 0; espacio < n - fila - 1; espacio++) {
-            cout << " ";
-        }
-        
-        // Imprimimos los coeficientes para cada fila
-        for (int columna = 0; columna <= fila; columna++) {
-            int coeficiente = calcularCoeficiente(fila, columna, coeficientes);
-            cout << coeficiente << " ";
-        }
+void mostrar(string *arreglo, int size) {
+    int max_length = arreglo[size - 1].length();
+    for (int i = 0; i < size; i++) {
+        int num_spaces = (max_length - arreglo[i].length()) / 2;
+        imprimirEspacios(num_spaces);
+        cout << arreglo[i];
+        imprimirEspacios(num_spaces);
         cout << endl;
     }
 }
 
-int main() {
-    int n;
-    cout << "Ingrese el número de filas del Triángulo de Pascal: ";
-    cin >> n;
-    imprimirTrianguloPascal(n);
-    return 0;
+void imprimirEspacios(int num) {
+    for (int i = 0; i < num; i++) {
+        cout << " ";
+    }
 }
 
